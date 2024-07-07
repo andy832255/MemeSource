@@ -35,7 +35,7 @@ namespace SocialMediaCrawlerApi.Controllers
                 System.Console.WriteLine(args.Url);
             };
 
-            var credentials = new TwitterCredentials("CONSUMER_KEY", "CONSUMER_SECRET", "ACCESS_TOKEN", "ACCESS_TOKEN_SECRET");
+            var credentials = new TwitterCredentials(_twitterConfig.APIKey, _twitterConfig.APIKeySecret, _twitterConfig.AccessToken, _twitterConfig.AccessTokenSecret);
 #warning todo
             
             var client = new TwitterClient(credentials);
