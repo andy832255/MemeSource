@@ -7,6 +7,7 @@ using System.Text.Json;
 using MemeSource.Models;
 using Serilog;
 using Tweetinvi.Models;
+using MemeSource.Filters;
 
 namespace SocialMediaCrawlerApi.Controllers
 {
@@ -24,8 +25,15 @@ namespace SocialMediaCrawlerApi.Controllers
             _pixivConfig = pixivConfig.Value;
             _httpClient = httpClient;
         }
+        [AsyncFilter]
+        [HttpGet("Test")]
+        public void Test()
+        {
+            Response.WriteAsync("test \r\n");
+        }
 
-        [HttpGet]
+        [MyFilter]
+        [HttpGet("CheckUsername")]
         public async Task<IActionResult> CheckUsername()
         {
             Log.Information("CheckUsername");
@@ -37,7 +45,7 @@ namespace SocialMediaCrawlerApi.Controllers
 
             var credentials = new TwitterCredentials(_twitterConfig.APIKey, _twitterConfig.APIKeySecret, _twitterConfig.AccessToken, _twitterConfig.AccessTokenSecret);
 #warning todo
-            
+
             var client = new TwitterClient(credentials);
 
             TweetinviEvents.SubscribeToClientEvents(client);
