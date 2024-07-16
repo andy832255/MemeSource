@@ -49,6 +49,7 @@ namespace MemeSource
 
             builder.Services.AddDbContext<MemeRepositoryContext>(options => {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("MainDB"));
+                options.EnableSensitiveDataLogging(); //EF SQL Console
             });
 
             builder.Services.Configure<TwitterConfig>(builder.Configuration.GetSection("Twitter"));
