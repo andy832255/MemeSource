@@ -1,3 +1,4 @@
+using MemeSource.Model.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace MemeRepository.Db.Models
@@ -16,6 +17,7 @@ namespace MemeRepository.Db.Models
         public virtual DbSet<IMAGE> IMAGE { get; set; } = null!;
         public virtual DbSet<TAG> TAG { get; set; } = null!;
         public virtual DbSet<TAG_BINDING> TAG_BINDING { get; set; } = null!;
+        public virtual DbSet<SystemProperty> SystemProperty { get; set; } = null!;
 
         //        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //        {
