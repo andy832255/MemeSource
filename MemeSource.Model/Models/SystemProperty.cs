@@ -1,8 +1,8 @@
-﻿namespace MemeSource.Model.Models
+﻿namespace MemeSource.Models
 {
     public class SystemProperty
     {
-        public int ID { get; set; }
+        public long ID { get; set; }
         public string? SP_Name { get; set; }
         public string? Parameter1 { get; set; }
         public string? Parameter2 { get; set; }

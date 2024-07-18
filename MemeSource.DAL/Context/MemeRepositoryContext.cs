@@ -1,4 +1,4 @@
-using MemeSource.Model.Models;
+using MemeSource.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace MemeRepository.Db.Models

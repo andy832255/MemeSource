@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace MemeSource.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class ImageFetchController : ControllerBase
 {
     private readonly ITwitterImageService _twitterImageService;
