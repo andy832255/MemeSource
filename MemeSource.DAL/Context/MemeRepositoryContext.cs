@@ -5,11 +5,13 @@ namespace MemeRepository.Db.Models
 {
     public partial class MemeRepositoryContext : DbContext
     {
-        public MemeRepositoryContext() {
+        public MemeRepositoryContext()
+        {
         }
 
         public MemeRepositoryContext(DbContextOptions<MemeRepositoryContext> options)
-            : base(options) {
+            : base(options)
+        {
         }
 
         public virtual DbSet<CATE> CATE { get; set; } = null!;
@@ -28,8 +30,10 @@ namespace MemeRepository.Db.Models
         //            }
         //        }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder) {
-            modelBuilder.Entity<CATE>(entity => {
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<CATE>(entity =>
+            {
                 entity.Property(e => e.CREATED).HasColumnType("datetime");
 
                 entity.Property(e => e.NAME).HasMaxLength(256);
@@ -37,7 +41,8 @@ namespace MemeRepository.Db.Models
                 entity.Property(e => e.UPDATED).HasColumnType("datetime");
             });
 
-            modelBuilder.Entity<IMAGE>(entity => {
+            modelBuilder.Entity<IMAGE>(entity =>
+            {
                 entity.Property(e => e.CREATED)
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
@@ -49,7 +54,8 @@ namespace MemeRepository.Db.Models
                 entity.Property(e => e.UPDATED).HasColumnType("datetime");
             });
 
-            modelBuilder.Entity<TAG>(entity => {
+            modelBuilder.Entity<TAG>(entity =>
+            {
                 entity.Property(e => e.CREATED).HasColumnType("datetime");
 
                 entity.Property(e => e.NAME).HasMaxLength(256);
@@ -57,6 +63,36 @@ namespace MemeRepository.Db.Models
                 entity.Property(e => e.UPDATED).HasColumnType("datetime");
             });
 
+            modelBuilder.Entity<SystemProperty>(entity =>
+            {
+                entity.HasKey(e => e.ID);
+                entity.Property(e => e.ID).ValueGeneratedOnAdd(); // Identity
+
+                entity.HasData(
+                    new SystemProperty
+                    {
+                        ID = 1,
+                        SP_Name = "Twitter",
+                        Parameter1 = "param1_twitter",
+                        Parameter2 = "param2_twitter",
+                        Parameter3 = "param3_twitter",
+                        Parameter4 = "param4_twitter",
+                        CreatedDate = DateTime.Now
+                        //UpdatedDate = DateTime.Now
+                    },
+                    new SystemProperty
+                    {
+                        ID = 2,
+                        SP_Name = "Pixiv",
+                        Parameter1 = "param1_pixiv",
+                        Parameter2 = "param2_pixiv",
+                        Parameter3 = "param3_pixiv",
+                        //Parameter4 = "param4_pixiv",
+                        CreatedDate = DateTime.Now
+                        //UpdatedDate = DateTime.Now
+                    }
+                );
+            });
             this.OnModelCreatingPartial(modelBuilder);
         }
 

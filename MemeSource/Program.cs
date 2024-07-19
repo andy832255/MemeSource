@@ -7,6 +7,8 @@ using Serilog;
 using Autofac.Core;
 using Microsoft.EntityFrameworkCore;
 using MemeRepository.Db.Models;
+using MemeSource.Repositories;
+using MemeSource.DAL.Interfaces;
 
 namespace MemeSource
 {
@@ -19,6 +21,7 @@ namespace MemeSource
             // Add services to the container.
             var builder = WebApplication.CreateBuilder(args);
 
+            //builder.Services.AddAutoMapper();
             builder.Services.AddControllers();
             builder.Services.AddHttpClient();
             builder.Services.AddEndpointsApiExplorer();
@@ -47,17 +50,20 @@ namespace MemeSource
                 //options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
             });
 
-            builder.Services.AddDbContext<MemeRepositoryContext>(options => {
+            builder.Services.AddDbContext<MemeRepositoryContext>(options =>
+            {
                 options.UseSqlServer(builder.Configuration.GetConnectionString("MainDB"));
                 options.EnableSensitiveDataLogging(); //EF SQL Console
             });
+            builder.Services.AddScoped<ISystemPropertyRepository, SystemPropertyRepository>();
 
             builder.Services.Configure<TwitterConfig>(builder.Configuration.GetSection("Twitter"));
             builder.Services.AddSingleton<ITwitterImageService, TwitterImageService>();
             builder.Services.AddHostedService<BackgroundImageFetchService>();
             builder.Services.AddSingleton<IBackgroundImageFetchService>(sp =>
                 sp.GetRequiredService<IHostedService>() as BackgroundImageFetchService);
-            builder.Services.AddRazorPages();
+            //builder.Services.AddRazorPages();
+            builder.Services.AddMvc(); //AddControllersWithViews()&AddRazorPages()
 
             var app = builder.Build();
 
@@ -92,6 +98,10 @@ namespace MemeSource
             app.UseAuthorization();
 
             app.MapRazorPages();
+
+            app.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=SystemProperty}/{action=Index}/{id?}");
 
             app.Run();
         }

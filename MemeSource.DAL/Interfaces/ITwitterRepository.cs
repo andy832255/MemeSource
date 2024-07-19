@@ -1,6 +1,6 @@
 ﻿using MemeSource.Models;
 
-namespace MemeSource.Interfaces;
+namespace MemeSource.Repositories;
 
 public interface ITwitterRepository
 {

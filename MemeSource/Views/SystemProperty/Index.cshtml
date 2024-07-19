@@ -1,0 +1,61 @@
+﻿@model IEnumerable<MemeSource.Models.SystemProperty>
+
+@{
+    ViewData["Title"] = "System Properties";
+}
+
+<h2>System Properties</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SP_Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Parameter1)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Parameter2)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Parameter3)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Parameter4)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SP_Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Parameter1)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Parameter2)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Parameter3)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Parameter4)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

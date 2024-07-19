@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MemeSource.DAL.Migrations
 {
     [DbContext(typeof(MemeRepositoryContext))]
-    [Migration("20240717155706_InitialCreate")]
+    [Migration("20240719154235_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -150,7 +150,7 @@ namespace MemeSource.DAL.Migrations
                     b.ToTable("TAG_BINDING");
                 });
 
-            modelBuilder.Entity("MemeSource.Model.Models.SystemProperty", b =>
+            modelBuilder.Entity("MemeSource.Models.SystemProperty", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -176,12 +176,33 @@ namespace MemeSource.DAL.Migrations
                     b.Property<string>("SP_Name")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("ID");
 
                     b.ToTable("SystemProperty");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            CreatedDate = new DateTime(2024, 7, 19, 23, 42, 35, 582, DateTimeKind.Local).AddTicks(2051),
+                            Parameter1 = "param1_twitter",
+                            Parameter2 = "param2_twitter",
+                            Parameter3 = "param3_twitter",
+                            Parameter4 = "param4_twitter",
+                            SP_Name = "Twitter"
+                        },
+                        new
+                        {
+                            ID = 2,
+                            CreatedDate = new DateTime(2024, 7, 19, 23, 42, 35, 582, DateTimeKind.Local).AddTicks(2060),
+                            Parameter1 = "param1_pixiv",
+                            Parameter2 = "param2_pixiv",
+                            Parameter3 = "param3_pixiv",
+                            SP_Name = "Pixiv"
+                        });
                 });
 #pragma warning restore 612, 618
         }

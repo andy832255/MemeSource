@@ -1,8 +1,13 @@
-﻿namespace MemeSource.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+
+namespace MemeSource.Models
 {
     public class SystemProperty
     {
-        public long ID { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int ID { get; set; }
         public string? SP_Name { get; set; }
         public string? Parameter1 { get; set; }
         public string? Parameter2 { get; set; }

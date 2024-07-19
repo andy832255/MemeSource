@@ -3,7 +3,7 @@ using MemeSource.Interfaces;
 using MemeSource.Models;
 using System.Data;
 
-namespace MemeSource.DAL.Repository
+namespace MemeSource.Repositories
 {
     public class TwitterRepository: ITwitterRepository
     {
