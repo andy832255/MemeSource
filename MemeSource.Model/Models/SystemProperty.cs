@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MemeSource.Models
 {
-    public class SystemProperty
+    public class SystemProperty : ISystemProperty
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

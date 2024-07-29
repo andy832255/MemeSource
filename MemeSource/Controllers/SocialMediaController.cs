@@ -1,13 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using System.Net.Http;
 using Tweetinvi;
 using Tweetinvi.Parameters;
 using System.Text.Json;
-using MemeSource.Models;
 using Serilog;
 using Tweetinvi.Models;
 using MemeSource.Filters;
+using MemeSource.DAL.Interfaces;
 
 namespace MemeSource.Controllers;
 
@@ -15,15 +13,13 @@ namespace MemeSource.Controllers;
 [Route("api/[controller]")]
 public class SocialMediaController : ControllerBase
 {
-    private readonly TwitterConfig _twitterConfig;
-    private readonly PixivConfig _pixivConfig;
     private readonly HttpClient _httpClient;
+    private readonly ISystemPropertyRepository _repository;
 
-    public SocialMediaController(IOptions<TwitterConfig> twitterConfig, IOptions<PixivConfig> pixivConfig, HttpClient httpClient)
+    public SocialMediaController(HttpClient httpClient, ISystemPropertyRepository repository)
     {
-        _twitterConfig = twitterConfig.Value;
-        _pixivConfig = pixivConfig.Value;
         _httpClient = httpClient;
+        _repository = repository;
     }
     [AsyncFilter]
     [HttpGet("Test")]
@@ -39,9 +35,9 @@ public class SocialMediaController : ControllerBase
         {
             Console.WriteLine(args.Url);
         };
+        var TwitterToken = _repository.GetTokenAsync("Twitter");
 
-        var credentials = new TwitterCredentials(_twitterConfig.APIKey, _twitterConfig.APIKeySecret, _twitterConfig.AccessToken, _twitterConfig.AccessTokenSecret);
-#warning todo
+        var credentials = new TwitterCredentials(TwitterToken.Parameter1, TwitterToken.Parameter2, TwitterToken.Parameter3, TwitterToken.Parameter4);
 
         var client = new TwitterClient(credentials);
 
@@ -60,7 +56,9 @@ public class SocialMediaController : ControllerBase
 
         try
         {
-            var userClient = new TwitterClient(_twitterConfig.APIKey, _twitterConfig.APIKeySecret, _twitterConfig.AccessToken, _twitterConfig.AccessTokenSecret);
+            var TwitterToken = _repository.GetTokenAsync("Twitter");
+
+            var userClient = new TwitterClient(TwitterToken.Parameter1, TwitterToken.Parameter2, TwitterToken.Parameter3, TwitterToken.Parameter4);
             var user = await userClient.Users.GetUserAsync(username);
             var timelineParameters = new GetUserTimelineParameters(user)
             {
@@ -96,15 +94,16 @@ public class SocialMediaController : ControllerBase
     [HttpGet("pixiv/{userid}")]
     public async Task<IActionResult> GetPixivImages(string userid)
     {
+        var PixivToken = _repository.GetTokenAsync("Pixiv");
         // 使用 RefreshToken取得AccessToken
         var tokenRequest = new HttpRequestMessage(System.Net.Http.HttpMethod.Post, "https://oauth.secure.pixiv.net/auth/token")
         {
             Content = new FormUrlEncodedContent(new Dictionary<string, string>
             {
-                { "client_id", _pixivConfig.ClientId },
-                { "client_secret", _pixivConfig.ClientSecret },
+                { "client_id", PixivToken.Parameter1 },
+                { "client_secret", PixivToken.Parameter2 },
                 { "grant_type", "refresh_token" },
-                { "refresh_token", _pixivConfig.RefreshToken }
+                { "refresh_token", PixivToken.Parameter3 }
             })
         };
 

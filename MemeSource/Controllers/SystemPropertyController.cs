@@ -1,6 +1,4 @@
-﻿using MemeRepository.Db.Models;
-using MemeSource.DAL.Interfaces;
-using MemeSource.Interfaces;
+﻿using MemeSource.DAL.Interfaces;
 using MemeSource.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

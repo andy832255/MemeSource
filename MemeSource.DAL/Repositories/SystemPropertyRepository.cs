@@ -50,5 +50,10 @@ namespace MemeSource.Repositories
         {
             return await _context.SystemProperty.AnyAsync(e => e.ID == id);
         }
+
+        public ISystemProperty GetTokenAsync(string name)
+        {
+            return _context.SystemProperty.Where(e => e.SP_Name == name).FirstOrDefault();
+        }
     }
 }
