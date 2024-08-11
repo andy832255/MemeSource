@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using MemeRepository.Db.Models;
 using MemeSource.Repositories;
 using MemeSource.DAL.Interfaces;
+using Hangfire;
+using Hangfire.SqlServer;
 
 namespace MemeSource
 {
@@ -21,10 +23,10 @@ namespace MemeSource
             // Add services to the container.
             var builder = WebApplication.CreateBuilder(args);
 
-            //builder.Services.AddAutoMapper();
             builder.Services.AddControllers();
             builder.Services.AddHttpClient();
             builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             builder.Services.AddSwaggerGen(options =>
             {
@@ -55,18 +57,33 @@ namespace MemeSource
                 options.UseSqlServer(builder.Configuration.GetConnectionString("MainDB"));
                 options.EnableSensitiveDataLogging(); //EF SQL Console
             });
-            builder.Services.AddScoped<ISystemPropertyRepository, SystemPropertyRepository>();
 
             builder.Services.Configure<TwitterConfig>(builder.Configuration.GetSection("Twitter"));
-            builder.Services.AddSingleton<ITwitterImageService, TwitterImageService>();
             builder.Services.AddHostedService<BackgroundImageFetchService>();
+
+            builder.Services.AddSingleton<ITwitterImageService, TwitterImageService>();
             builder.Services.AddSingleton<IBackgroundImageFetchService>(sp =>
                 sp.GetRequiredService<IHostedService>() as BackgroundImageFetchService);
+            builder.Services.AddScoped<ISystemPropertyRepository, SystemPropertyRepository>();
             //builder.Services.AddRazorPages();
-            builder.Services.AddMvc(); //AddControllersWithViews()&AddRazorPages()
+            builder.Services.AddMvc(); // AddControllersWithViews() & AddRazorPages()
+            //Hangfire Service
+            builder.Services.AddHangfire(configuration => configuration
+            .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+            .UseSimpleAssemblyNameTypeSerializer()
+            .UseRecommendedSerializerSettings()
+            .UseSqlServerStorage(builder.Configuration.GetConnectionString("MainDB"), new SqlServerStorageOptions
+            {
+                CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                QueuePollInterval = TimeSpan.Zero,
+                UseRecommendedIsolationLevel = true,
+                DisableGlobalLocks = true
+            }));
 
             var app = builder.Build();
-
+            // HangFire Dashboard
+            app.UseHangfireDashboard();
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
